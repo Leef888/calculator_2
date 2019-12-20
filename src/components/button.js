@@ -5,13 +5,57 @@ const Button = (props) => {
     let buttonValue = React.createRef()
 
     let numberClicked = () => {
-      let text = props.newValue.current.value + buttonValue.current.value;
-      props.newValue.current.value = text
+        let x = buttonValue.current.value;
+
+        let y = props.thisValue.current.value;
+
+        if (buttonValue.current.className === "allClear") {
+            props.allClearButton();
+            props.thisValue.current.value = ""
+
+        } else if (buttonValue.current.className === "decimate") {
+            let a = y.indexOf(x);
+            
+            if (a > -1) {
+                let text = props.thisValue.current.value + "";
+                props.thisValue.current.value = text
+            }else if (y === "" || y === "+" || y === "-" || y === "*" || y === "/") {
+                let text = "0" + buttonValue.current.value;
+                props.thisValue.current.value = text
+                props.switcherFalse();
+            } else {
+                let text = props.thisValue.current.value + buttonValue.current.value;
+                props.thisValue.current.value = text
+                props.switcherFalse();
+            }
+
+        } else if (buttonValue.current.className === "operator") {
+            props.saveValue(y);
+            props.thisValue.current.value = "" + x;
+            props.addOperator(x);
+
+        } else if (buttonValue.current.className === "equal") {
+            props.saveValue(y);
+            props.calculation()
+
+        } else {
+            props.switcherFalse();
+            let a = y.indexOf("+");
+            let b = y.indexOf("-");
+            let c = y.indexOf("*");
+            let d = y.indexOf("/");
+            if (a > -1 || b > -1 || c > -1 || d > -1) {
+                props.thisValue.current.value = "" + buttonValue.current.value;
+            } else {
+                let text = props.thisValue.current.value + buttonValue.current.value;
+                props.thisValue.current.value = text
+            }
+        }
     }
 
     return (
         <div className={props.className}>
-            <button className={props.className} ref={buttonValue} onClick={numberClicked} value={props.buttonsName} action={props.buttonsAction}>{props.buttonsName}</button>
+            <button className={props.className} ref={buttonValue} onClick={numberClicked} value={props.buttonsName}>{props.buttonsName}</button>
         </div>
     );
 }
